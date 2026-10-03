@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TaskMate</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            Task<span>Mate</span>
+        </div>
+
+        <p class="subtitle">
+            Student Task Manager
+        </p>
+
+        <nav>
+            <a href="#dashboard">🏠 Dashboard</a>
+            <a href="#tasks">📚 Daftar Tugas</a>
+            <a href="#completed">✅ Sudah Dikerjakan</a>
+            <a href="#calendar">📅 Kalender</a>
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header id="dashboard" class="header">
+
+            <div>
+                <p class="label">STUDENT DASHBOARD</p>
+
+                <h1>Manajemen Tugas</h1>
+
+                <p class="description">
+                    Kelola tugas kuliah, deadline,
+                    dan catatan dengan mudah.
+                </p>
+            </div>
+
+            <button
+                class="btn primary"
+                onclick="openTaskForm()">
+                + Tambah Tugas
+            </button>
+
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">📋</div>
+
+                <div>
+                    <small>Total Tugas</small>
+                    <strong id="totalTasks">0</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon orange">⏳</div>
+
+                <div>
+                    <small>Belum Selesai</small>
+                    <strong id="pendingTasks">0</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+
+                <div>
+                    <small>Selesai</small>
+                    <strong id="completedTasks">0</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon purple">📅</div>
+
+                <div>
+                    <small>Deadline Terdekat</small>
+                    <strong id="nearestDeadline">-</strong>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ADD TASK FORM -->
+        <section
+            id="taskFormSection"
+            class="form-section hidden">
+
+            <div class="section-title">
+
+                <p class="label">TASK FORM</p>
+
+                <h2 id="formTitle">
+                    Tambah Tugas
+                </h2>
+
+            </div>
+
+
+            <form id="taskForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="taskName">
+                            Nama Tugas
+                        </label>
+
+                        <input
+                            id="taskName"
+                            type="text"
+                            placeholder="Contoh: Tugas Fisika"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taskCourse">
+                            Mata Kuliah
+                        </label>
+
+                        <input
+                            id="taskCourse"
+                            type="text"
+                            placeholder="Contoh: Fisika"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taskDeadline">
+                            Deadline
+                        </label>
+
+                        <input
+                            id="taskDeadline"
+                            type="date"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taskPriority">
+                            Prioritas
+                        </label>
+
+                        <select id="taskPriority">
+
+                            <option value="Rendah">
+                                Rendah
+                            </option>
+
+                            <option value="Sedang" selected>
+                                Sedang
+                            </option>
+
+                            <option value="Tinggi">
+                                Tinggi
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group notes">
+
+                    <label for="taskNotes">
+                        Catatan
+                    </label>
+
+                    <textarea
+                        id="taskNotes"
+                        rows="4"
+                        placeholder="Tambahkan catatan tugas..."></textarea>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="btn primary">
+                        Simpan Tugas
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn secondary"
+                        onclick="closeTaskForm()">
+                        Batal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- ACTIVE TASKS -->
+        <section
+            id="tasks"
+            class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <p class="label">ACTIVE TASKS</p>
+
+                    <h2>Daftar Tugas</h2>
+                </div>
+
+
+                <div class="filters">
+
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="🔍 Cari tugas...">
+
+
+                    <select id="courseFilter">
+                        <option value="Semua">
+                            Semua Mata Kuliah
+                        </option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div id="taskList"></div>
+
+
+            <div
+                id="emptyState"
+                class="empty hidden">
+
+                <div class="empty-icon">
+                    🎉
+                </div>
+
+                <h3>
+                    Tidak ada tugas aktif
+                </h3>
+
+                <p>
+                    Tambahkan tugas baru atau
+                    semua tugas sudah selesai.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- COMPLETED -->
+        <section
+            id="completed"
+            class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <p class="label">
+                        COMPLETED TASKS
+                    </p>
+
+                    <h2>
+                        ✅ Sudah Dikerjakan
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div id="completedList"></div>
+
+
+            <div
+                id="completedEmpty"
+                class="empty hidden">
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h3>
+                    Belum ada tugas selesai
+                </h3>
+
+                <p>
+                    Tugas yang selesai akan muncul di sini.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- CALENDAR -->
+        <section
+            id="calendar"
+            class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <p class="label">
+                        DEADLINE CALENDAR
+                    </p>
+
+                    <h2>
+                        Kalender Tugas
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="calendar-layout">
+
+                <div class="calendar-card">
+
+                    <div class="calendar-top">
+
+                        <button
+                            class="calendar-button"
+                            onclick="changeMonth(-1)">
+                            ‹
+                        </button>
+
+                        <h3 id="calendarTitle"></h3>
+
+                        <button
+                            class="calendar-button"
+                            onclick="changeMonth(1)">
+                            ›
+                        </button>
+
+                    </div>
+
+
+                    <div class="weekdays">
+
+                        <span>Sen</span>
+                        <span>Sel</span>
+                        <span>Rab</span>
+                        <span>Kam</span>
+                        <span>Jum</span>
+                        <span>Sab</span>
+                        <span>Min</span>
+
+                    </div>
+
+
+                    <div
+                        id="calendarGrid"
+                        class="calendar-grid">
+                    </div>
+
+                </div>
+
+
+                <div class="calendar-details">
+
+                    <p class="label">
+                        TUGAS PADA TANGGAL
+                    </p>
+
+                    <h3 id="selectedDate">
+                        Pilih tanggal
+                    </h3>
+
+                    <div id="selectedTasks">
+
+                        <p class="muted">
+                            Klik salah satu tanggal.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="footer">
+
+            <p>
+                TaskMate — Sistem Manajemen Tugas Mahasiswa
+            </p>
+
+            <span>
+                Saifullah Nur Lathif Sasongko
+                40040326620010
+            </span>
+
+        </footer>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
